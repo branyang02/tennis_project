@@ -33,7 +33,9 @@ Future improvements:
 
 * [IsaacGym](https://developer.nvidia.com/isaac-gym)
 * Optional: [IsaacGymEnvs](https://github.com/NVIDIA-Omniverse/IsaacGymEnvs)
-* PyTorch 
+* Cuda >= 11.4
+* PyTorch >= 1.12.0
+* 
 * ex. Windows 10
 
 ### Installing
