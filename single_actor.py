@@ -113,6 +113,7 @@ upper_bound_list = props["upper"]
 print(lower_bound_list)
 print(upper_bound_list)
 
+
 while not gym.query_viewer_has_closed(viewer):
 
     # step the physics
@@ -130,7 +131,7 @@ while not gym.query_viewer_has_closed(viewer):
     speed = math.sqrt(xyz_velocity[0].item()**2 + xyz_velocity[1].item()**2 + xyz_velocity[2].item()**2)
     #print(speed)
 
-    # position = (position, orientation)
+    # position = (3 position, 4 orientation)
     position = rb_states[:, 0:7]
     #print(position)
 
@@ -139,7 +140,7 @@ while not gym.query_viewer_has_closed(viewer):
         random_action = random.uniform(lower_bound_list[i], upper_bound_list[i])
         dof_states[i] = torch.tensor([random_action, 0], device="cuda:0")
 
-    # applies all the values in the tensor
+    # applies all the values in the tensor (reverse kinematics)
     gym.set_dof_state_tensor(sim, _dof_states)
 
     # update the viewer
