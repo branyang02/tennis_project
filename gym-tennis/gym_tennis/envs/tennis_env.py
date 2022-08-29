@@ -44,6 +44,9 @@ class TennisEnv(gym.Env):
     self.position = rb_states[:, 0:7]
     #print(position)
 
+    # perform action
+    for i in range(len(dof_states)):
+      dof_states[i] = torch.tensor([action, 0], device="cuda:0")
     # perform random action
     # for i in range(len(dof_states)):
     #     random_action = random.uniform(lower_bound_list[i], upper_bound_list[i])
