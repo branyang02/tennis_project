@@ -1,35 +1,94 @@
-import os, subprocess, time, signal
+from simulator import *
+
+
 import gym
-from gym import error, spaces
-from gym import utils
-from gym.utils import seeding
+from gym import spaces
+import numpy as np
 
-from simulator import Speed, PositionStates
-from simulator import lower_bound_list, upper_bound_list, dof_states
-
-import torch
-import random
-
-
-#generate random action
-def GenerateAction():
-  for i in range(len(dof_states)):
-    random_action = random.uniform(lower_bound_list[i], upper_bound_list[i])
-    dof_states[i] = torch.tensor([random_action, 0], device="cuda:0")
-    return dof_states
-
-"""
-class FooEnv(gym.Env):
+class TennisEnv(gym.Env):
   metadata = {'render.modes': ['human']}
 
   def __init__(self):
-    ...
+      super(TennisEnv, self).__init__()
+      
+      # action space
+      self.action_space = spaces.Box(
+      low=lower_bound_list, high=upper_bound_list, dtype=np.float16)
+
+      x = np.zeros((17))
+      # observation space
+      self.observation_space = spaces.Box(
+          np.zeros((17)), np.full_like(x, 7, dtype=np.int), dtype=np.int
+      )
+
   def step(self, action):
-    ...
+    
+    self.episode_length += 1
+
+    # step the physics
+    gym.simulate(sim)
+    gym.fetch_results(sim, True)
+
+    # refresh
+    gym.refresh_actor_root_state_tensor(sim)
+    gym.refresh_rigid_body_state_tensor(sim)
+    gym.refresh_dof_state_tensor(sim)
+
+    # compute velocity of the "racket head"
+    # 13 is the index of the racket; rigid body 7:10 are the index for xyz velocities respecitvely
+    xyz_velocity = rb_states[13][7:10]
+    self.speed = math.sqrt(xyz_velocity[0].item()**2 + xyz_velocity[1].item()**2 + xyz_velocity[2].item()**2)
+    #print(speed)
+
+    # position = (3 position, 4 orientation), 17 rigid bodies
+    self.position = rb_states[:, 0:7]
+    #print(position)
+
+    # perform random action
+    # for i in range(len(dof_states)):
+    #     random_action = random.uniform(lower_bound_list[i], upper_bound_list[i])
+    #     dof_states[i] = torch.tensor([random_action, 0], device="cuda:0")
+
+    # applies all the values in the tensor (reverse kinematics)
+    gym.set_dof_state_tensor(sim, self._dof_states)
+
+    # update the viewer
+    gym.step_graphics(sim)
+    gym.draw_viewer(viewer, sim, True)
+
+    # Wait for dt to elapse in real time.
+    # This synchronizes the physics simulation with the rendering rate.
+    gym.sync_frame_time(sim)
+
+    if self.episode_length > 1000:
+      self.done = True
+      self.episode_length = 0
+
+    if self.done:
+      self.reward = -10
+    else:
+      self.reward = self.speed
+
+
+    position = rb_states[:, 0:7]
+
+    self.observation = [position]
+    self.observation = np.array(self.observation)
+
+    return self.position, self.reward
+
   def reset(self):
-    ...
-  def render(self, mode='human'):
-    ...
-  def close(self):
-    ...
-"""
+
+    self.episode_length = 0
+
+    # reset to original position.
+    for i in range(len(dof_states)):
+      dof_states[i] = torch.tensor([0, 0], device="cuda:0")
+    
+    # observation: position + quaternion
+    position = rb_states[:, 0:7]
+
+    self.observation = [position]
+    self.observation = np.array(self.observation)
+
+    return self.observation

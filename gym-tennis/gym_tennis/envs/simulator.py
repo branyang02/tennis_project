@@ -1,12 +1,10 @@
-from logging import root
+from isaacgym import gymapi, gymutil
+from isaacgym import gymtorch
+
 import math
 import random
-from turtle import up
-import numpy as np
-from isaacgym import gymapi, gymutil, gymtorch
-import torch
 
-from tennis_env import GenerateAction
+import torch
 
 # simulation setup
 gym = gymapi.acquire_gym()
@@ -59,7 +57,7 @@ env_upper = gymapi.Vec3(spacing, spacing, spacing)
 envs = []
 actor_handles = []
 
-print("Creating %d environment" % num_envs)
+# print("Creating %d environment" % num_envs)
 
 for i in range(num_envs):
 
@@ -76,9 +74,9 @@ for i in range(num_envs):
 num_bodies = gym.get_actor_rigid_body_count(env, actor_handle)
 num_joints = gym.get_actor_joint_count(env, actor_handle)
 num_dofs = gym.get_actor_dof_count(env, actor_handle)
-print("number of bodies: ", num_bodies)
-print("number of joints: ", num_joints)
-print("number of dofs: ", num_dofs)
+# print("number of bodies: ", num_bodies)
+# print("number of joints: ", num_joints)
+# print("number of dofs: ", num_dofs)
 
 
 gym.prepare_sim(sim)
@@ -106,23 +104,16 @@ rb_states = gymtorch.wrap_tensor(_rb_states)
 # dof_states = position, velocity
 _dof_states = gym.acquire_dof_state_tensor(sim)
 dof_states = gymtorch.wrap_tensor(_dof_states)
-print(dof_states.size())
+# print(dof_states.size())
 
 
 props = gym.get_actor_dof_properties(env, actor_handle)
 lower_bound_list = props["lower"]
 upper_bound_list = props["upper"]
-print(lower_bound_list)
-print(upper_bound_list)
-
-def Speed():
-    print(speed)
-
-def PositionStates():
-    print(position)
-
-while not gym.query_viewer_has_closed(viewer):
-
+# print(lower_bound_list)
+# print(upper_bound_list)
+'''
+def step():
     # step the physics
     gym.simulate(sim)
     gym.fetch_results(sim, True)
@@ -136,12 +127,10 @@ while not gym.query_viewer_has_closed(viewer):
     # 13 is the index of the racket; rigid body 7:10 are the index for xyz velocities respecitvely
     xyz_velocity = rb_states[13][7:10]
     speed = math.sqrt(xyz_velocity[0].item()**2 + xyz_velocity[1].item()**2 + xyz_velocity[2].item()**2)
-    Speed()
     #print(speed)
 
-    # position = (3 position, 4 orientation)
+    # position = (3 position, 4 orientation), 17 rigid bodies
     position = rb_states[:, 0:7]
-    PositionStates()
     #print(position)
 
     # perform random action
@@ -159,6 +148,13 @@ while not gym.query_viewer_has_closed(viewer):
     # Wait for dt to elapse in real time.
     # This synchronizes the physics simulation with the rendering rate.
     gym.sync_frame_time(sim)
+    return position, speed
 
-gym.destroy_viewer(viewer)
-gym.destory_sim(sim)
+
+while not gym.query_viewer_has_closed(viewer):
+    step()
+
+'''
+
+# gym.destroy_viewer(viewer)
+# gym.destory_sim(sim)

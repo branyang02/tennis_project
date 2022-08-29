@@ -1,1 +1,1 @@
-from gym_tennis.envs.tennis_env import FooEnv
+from gym_tennis.envs.tennis_env import TennisEnv
