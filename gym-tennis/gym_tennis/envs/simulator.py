@@ -1,8 +1,8 @@
-from isaacgym import gymapi, gymutil
-from isaacgym import gymtorch
-
 import math
 import random
+import numpy as np
+from isaacgym import gymapi, gymutil
+from isaacgym import gymtorch
 
 import torch
 
@@ -57,7 +57,7 @@ env_upper = gymapi.Vec3(spacing, spacing, spacing)
 envs = []
 actor_handles = []
 
-# print("Creating %d environment" % num_envs)
+print("Creating %d environment" % num_envs)
 
 for i in range(num_envs):
 
@@ -74,9 +74,9 @@ for i in range(num_envs):
 num_bodies = gym.get_actor_rigid_body_count(env, actor_handle)
 num_joints = gym.get_actor_joint_count(env, actor_handle)
 num_dofs = gym.get_actor_dof_count(env, actor_handle)
-# print("number of bodies: ", num_bodies)
-# print("number of joints: ", num_joints)
-# print("number of dofs: ", num_dofs)
+print("number of bodies: ", num_bodies)
+print("number of joints: ", num_joints)
+print("number of dofs: ", num_dofs)
 
 
 gym.prepare_sim(sim)
@@ -104,16 +104,18 @@ rb_states = gymtorch.wrap_tensor(_rb_states)
 # dof_states = position, velocity
 _dof_states = gym.acquire_dof_state_tensor(sim)
 dof_states = gymtorch.wrap_tensor(_dof_states)
-# print(dof_states.size())
+print(dof_states.size())
 
 
 props = gym.get_actor_dof_properties(env, actor_handle)
 lower_bound_list = props["lower"]
 upper_bound_list = props["upper"]
-# print(lower_bound_list)
-# print(upper_bound_list)
-'''
-def step():
+print(lower_bound_list)
+print(upper_bound_list)
+
+
+#while not gym.query_viewer_has_closed(viewer):
+def step(action):
     # step the physics
     gym.simulate(sim)
     gym.fetch_results(sim, True)
@@ -129,14 +131,14 @@ def step():
     speed = math.sqrt(xyz_velocity[0].item()**2 + xyz_velocity[1].item()**2 + xyz_velocity[2].item()**2)
     #print(speed)
 
-    # position = (3 position, 4 orientation), 17 rigid bodies
+    # position = (3 position, 4 orientation)
     position = rb_states[:, 0:7]
     #print(position)
 
     # perform random action
     for i in range(len(dof_states)):
-        random_action = random.uniform(lower_bound_list[i], upper_bound_list[i])
-        dof_states[i] = torch.tensor([random_action, 0], device="cuda:0")
+        dof_states[i] = torch.tensor([action[i], 0], device="cuda:0")
+        #dof_states[i] = torch.tensor([0, 0], device="cuda:0")
 
     # applies all the values in the tensor (reverse kinematics)
     gym.set_dof_state_tensor(sim, _dof_states)
@@ -148,13 +150,17 @@ def step():
     # Wait for dt to elapse in real time.
     # This synchronizes the physics simulation with the rendering rate.
     gym.sync_frame_time(sim)
+
+    if max_length > 
+
     return position, speed
 
-
-while not gym.query_viewer_has_closed(viewer):
-    step()
-
-'''
+# while True:
+#     # define action test
+#     for i in range(len(dof_states)):
+#         random_action = random.uniform(lower_bound_list[i], upper_bound_list[i])
+#         print(type(random_action))
+#     step(random_action)
 
 # gym.destroy_viewer(viewer)
 # gym.destory_sim(sim)
