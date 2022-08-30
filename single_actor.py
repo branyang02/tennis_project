@@ -133,12 +133,13 @@ while not gym.query_viewer_has_closed(viewer):
 
     # position = (3 position, 4 orientation)
     position = rb_states[:, 0:7]
-    #print(position)
+    print(position.size())
 
     # perform random action
     for i in range(len(dof_states)):
         random_action = random.uniform(lower_bound_list[i], upper_bound_list[i])
-        #dof_states[i] = torch.tensor([random_action, 0], device="cuda:0")
+        print(type(random_action))
+        dof_states[i] = torch.tensor([random_action, 0], device="cuda:0")
         #dof_states[i] = torch.tensor([0, 0], device="cuda:0")
 
     # applies all the values in the tensor (reverse kinematics)

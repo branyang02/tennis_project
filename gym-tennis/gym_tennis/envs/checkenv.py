@@ -1,8 +1,7 @@
-from random import random
-from xml.etree.ElementTree import TreeBuilder
+
 from stable_baselines3.common.env_checker import check_env
 from tennis_env import TennisEnv
-
+from simulator import *
 
 env = TennisEnv()
 
@@ -18,5 +17,9 @@ env = TennisEnv()
 #         obs, reward, done, info = env.step(random_action)
 #         print("reward", reward)
 
-random_action = env.action_space.sample()
-print(random_action)
+
+while True:
+    random_action = env.action_space.sample()
+    obs, reward = step(random_action)
+    print("observation\n", obs)
+    print("reward\n", reward)

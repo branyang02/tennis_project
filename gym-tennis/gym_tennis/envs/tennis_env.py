@@ -21,9 +21,7 @@ class TennisEnv(gym.Env):
           np.zeros((17)), np.full_like(x, 7, dtype=np.int), dtype=np.int
       )
 
-  def step(self, action):
-    
-    self.episode_length += 1
+  def step(self, action):  
 
     # step the physics
     gym.simulate(sim)
@@ -63,22 +61,12 @@ class TennisEnv(gym.Env):
     # This synchronizes the physics simulation with the rendering rate.
     gym.sync_frame_time(sim)
 
-    if self.episode_length > 1000:
-      self.done = True
-      self.episode_length = 0
-
-    if self.done:
-      self.reward = -10
-    else:
-      self.reward = self.speed
-
-
     position = rb_states[:, 0:7]
 
     self.observation = [position]
     self.observation = np.array(self.observation)
 
-    return self.position, self.reward
+    return self.position, self.speed
 
   def reset(self):
 
