@@ -151,7 +151,7 @@ def step(action):
     # This synchronizes the physics simulation with the rendering rate.
     gym.sync_frame_time(sim)
 
-    if max_length > 
+    #if max_length > 
 
     return position, speed
 
