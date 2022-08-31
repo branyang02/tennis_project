@@ -104,14 +104,11 @@ rb_states = gymtorch.wrap_tensor(_rb_states)
 # dof_states = position, velocity
 _dof_states = gym.acquire_dof_state_tensor(sim)
 dof_states = gymtorch.wrap_tensor(_dof_states)
-print(dof_states.size())
 
-
+# get lower and upper bounds of dofs.
 props = gym.get_actor_dof_properties(env, actor_handle)
 lower_bound_list = props["lower"]
 upper_bound_list = props["upper"]
-print(lower_bound_list)
-print(upper_bound_list)
 
 
 while not gym.query_viewer_has_closed(viewer):
@@ -129,18 +126,14 @@ while not gym.query_viewer_has_closed(viewer):
     # 13 is the index of the racket; rigid body 7:10 are the index for xyz velocities respecitvely
     xyz_velocity = rb_states[13][7:10]
     speed = math.sqrt(xyz_velocity[0].item()**2 + xyz_velocity[1].item()**2 + xyz_velocity[2].item()**2)
-    #print(speed)
 
     # position = (3 position, 4 orientation)
     position = rb_states[:, 0:7]
-    print(position.size())
 
     # perform random action
     for i in range(len(dof_states)):
         random_action = random.uniform(lower_bound_list[i], upper_bound_list[i])
-        print(type(random_action))
         dof_states[i] = torch.tensor([random_action, 0], device="cuda:0")
-        #dof_states[i] = torch.tensor([0, 0], device="cuda:0")
 
     # applies all the values in the tensor (reverse kinematics)
     gym.set_dof_state_tensor(sim, _dof_states)
