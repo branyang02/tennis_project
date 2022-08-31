@@ -35,16 +35,25 @@ Future improvements:
 * Optional: [IsaacGymEnvs](https://github.com/NVIDIA-Omniverse/IsaacGymEnvs)
 * Cuda >= 11.4
 * PyTorch >= 1.12.0
+* [StableBaseline3](https://stable-baselines3.readthedocs.io/en/master/)
 
 ### Installing
 
-* See [IsaacGym](https://developer.nvidia.com/isaac-gym)
+* See [IsaacGym](https://developer.nvidia.com/isaac-gym) for more installation and dependencies info.
 
 ### Executing program
+1. Set up the anaconda environment.
+```
+conda activate rlgpu
+export LD_LIBRARY_PATH=/home/xyz/anaconda3/envs/rlgpu/lib
+```
+2. Run the trainning file.
+```
+cd gym-tennis
+python learning.py
+```
 
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
+
+### Troubleshooting
+See included "index.html" for more troubleshooting tips.
 
