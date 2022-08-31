@@ -57,3 +57,15 @@ python learning.py
 ### Troubleshooting
 See included "index.html" for more troubleshooting tips.
 
+### Tennis Racket Creation
+The following code is added to "nv_humanoid.xml" to create the tennis racket.
+```
+ <joint name="right_wrist" axis="-1 -1 -1" range="-90 90" class="big_joint"/>
+            <joint name="right_wrist_2" axis="0 -1 1" range="-30 90" class="small_joint" pos=".18 -.18 -.18"/>
+            <geom name="right_hand" fromto="0 0 0 .17 .17 .17" size=".031"/>
+            <site name="right_hand" class="touch" type="sphere" size=".041"/>
+            <body name="racket" pos=".16 .20 .16">
+              <geom name="racket" type="cylinder" fromto="0 0 0 .027 -.054 .027" size="0.15"/>
+              <site name="racket" class="touch" type="cylinder" size="0.041"/> 
+```
+Two joints are created to simulate wrist movement.
