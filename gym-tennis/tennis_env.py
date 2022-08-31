@@ -41,7 +41,7 @@ class TennisEnv(gym.Env):
         self.speed = math.sqrt(xyz_velocity[0].item()**2 + xyz_velocity[1].item()**2 + xyz_velocity[2].item()**2)
 
         # position = (3 position, 4 orientation)
-        self.position = rb_states[:, 0:7]
+        self.position = rb_states[:, 0:7].detach().cpu().numpy()
 
         # perform action
         # action is a list of 17, corresponds to 17 rigid bodies in the actor.
@@ -77,5 +77,5 @@ class TennisEnv(gym.Env):
     def reset(self):
         reset_action = np.zeros(23)
         observation, __, __, __ = self.step(reset_action)
-        observation = observation.detach().cpu().numpy()
+        #observation = observation.detach().cpu().numpy()
         return observation

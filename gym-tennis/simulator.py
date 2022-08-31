@@ -34,8 +34,8 @@ gym1.add_ground(sim, plane_params)
 viewer = gym1.create_viewer(sim, gymapi.CameraProperties())
 
 # load the humanoid with tennis racket mjcf file
-asset_root = "/home/brandon/isaacgym/assets"
-asset_file = "mjcf/nv_humanoid.xml"
+asset_root = "../"
+asset_file = "nv_humanoid.xml"
 # asset options
 asset_options = gymapi.AssetOptions()
 asset_options.fix_base_link = True
