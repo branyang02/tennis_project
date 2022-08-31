@@ -119,9 +119,9 @@
             <!--<joint name="right_wrist_3" axis="1 0 0.5" range="-30 90" class="big_joint" pos=".18 -.18 -.18"/>-->
             <geom name="right_hand" fromto="0 0 0 .17 .17 .17" size=".031"/>
             <site name="right_hand" class="touch" type="sphere" size=".041"/>
-            <body name="test" pos=".16 .20 .16">
-              <geom name="test" type="cylinder" fromto="0 0 0 .027 -.054 .027" size="0.15"/>
-              <site name="test" class="touch" type="cylinder" size="0.041"/> 
+            <body name="racket" pos=".16 .20 .16">
+              <geom name="racket" type="cylinder" fromto="0 0 0 .027 -.054 .027" size="0.15"/>
+              <site name="racket" class="touch" type="cylinder" size="0.041"/> 
 
           <!--<body name="right_hand" pos=".18 .18 .18">
             <geom name="right_hand" type="sphere" size=".04"/> 
@@ -209,7 +209,7 @@
     <touch name="right_upper_arm_touch"  site="right_upper_arm"/>
     <touch name="right_lower_arm_touch"  site="right_lower_arm"/>
     <touch name="right_hand_touch"       site="right_hand"/>
-    <touch name="test_touch"             site="test"/>
+    <touch name="racket_touch"           site="racket"/>
     <touch name="left_upper_arm_touch"   site="left_upper_arm"/>
     <touch name="left_lower_arm_touch"   site="left_lower_arm"/>
     <touch name="left_hand_touch"        site="left_hand"/>
